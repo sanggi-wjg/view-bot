@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "viewer-bot"
+version = "0.1.0"
+description = ""
+authors = ["Raynor <jonggu.woo@fitpet.co.kr>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+black = "^25.11.0"
+httpx = "^0.28.1"
+seleniumbase = "^4.44.17"
+colorful-print = "^1.0.0"
+pydantic = "^2.12.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
