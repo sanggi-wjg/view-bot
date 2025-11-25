@@ -1,0 +1,38 @@
+[
+  {
+    "ip": "4.149.153.123",
+    "port": 3128,
+    "socket_ok": true,
+    "https_ok": true
+  },
+  {
+    "ip": "103.70.79.3",
+    "port": 8080,
+    "socket_ok": true,
+    "https_ok": true
+  },
+  {
+    "ip": "144.126.236.218",
+    "port": 8888,
+    "socket_ok": true,
+    "https_ok": true
+  },
+  {
+    "ip": "200.59.186.177",
+    "port": 999,
+    "socket_ok": true,
+    "https_ok": true
+  },
+  {
+    "ip": "210.87.74.85",
+    "port": 9090,
+    "socket_ok": true,
+    "https_ok": true
+  },
+  {
+    "ip": "181.79.234.90",
+    "port": 999,
+    "socket_ok": true,
+    "https_ok": true
+  }
+]
