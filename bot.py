@@ -1,50 +1,52 @@
-import json
-import os
-import random
-from pathlib import Path
+import asyncio
 
-from colorful_print import cp
-from pydantic import BaseModel
-from seleniumbase import SB
+import typer
 
-
-class ProxyServer(BaseModel):
-    ip: str
-    port: int
-
-    @property
-    def address(self) -> str:
-        return f"{self.ip}:{self.port}"
+from viewerbot.model import ProxyServer
+from viewerbot.utils import read_proxy_available
+from viewerbot.viewbot import ViewBot
 
 
-def read_proxy_available(
-    filename: str = "proxy_available.json",
-) -> list[dict]:
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    datapath = os.path.join(script_dir, ".data", filename)
-    filepath = Path(datapath)
-    if not filepath.exists():
-        raise FileNotFoundError(f"파일이 존재하지 않습니다: {filepath}")
+async def async_main(
+    url: str,
+    headless: bool,
+    use_proxy: bool,
+):
+    if use_proxy:
+        proxies = [ProxyServer(**item) for item in read_proxy_available()]
+        bots = [
+            ViewBot(
+                i + 1,
+                url,
+                headless,
+                p,
+            )
+            for i, p in enumerate(proxies)
+        ]
+    else:
+        bots = [
+            ViewBot(
+                i + 1,
+                url,
+                headless,
+                None,
+            )
+            for i in range(5)
+        ]
 
-    with open(filepath, "r") as f:
-        return json.load(f)
+    tasks = [bot.run() for bot in bots]
+    await asyncio.gather(*tasks)
 
 
-def main():
-    proxies: list[ProxyServer] = [ProxyServer(**item) for item in read_proxy_available()]
-    proxy: ProxyServer = random.choice(proxies)
-
-    url = "https://httpbin.org/ip"
-    # url = "https://sanggi-jayg.tistory.com/entry/Mac-%EB%A7%A5-%ED%99%98%EA%B2%BD-Jetbrains-IDE-%EA%B3%BC%EA%B1%B0-%EB%B2%84%EC%A0%84-%EC%82%AD%EC%A0%9C"
-
-    with SB(proxy=proxy.address, multi_proxy=True) as sb:
-        cp.green(f"Try access {url}")
-        sb.open(url)
-        # sb.uc_open_with_reconnect(url)
-        sb.wait(2)
-
-        sb.sleep(5)
+def main(
+    url: str = "https://www.fitpetmall.com/mall",
+    headless: bool = True,
+    use_proxy: bool = False,
+):
+    asyncio.run(
+        async_main(url, headless, use_proxy),
+    )
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)
