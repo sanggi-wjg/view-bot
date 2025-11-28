@@ -47,3 +47,23 @@ def get_random_locale_and_timezone() -> tuple[str, str]:
             ("en-NZ", "Pacific/Auckland"),
         ]
     )
+
+
+def get_random_referer() -> str | None:
+    return random.choice(
+        [
+            "https://www.google.com/",
+            "https://www.google.co.kr/",
+            "https://www.naver.com/",
+            "https://www.daum.net/",
+            "https://www.bing.com/",
+            "https://www.yahoo.com/",
+            "https://www.facebook.com/",
+            "https://twitter.com/",
+            "https://www.youtube.com/",
+            "https://www.instagram.com/",
+            "https://www.reddit.com/",
+            "https://www.twitch.tv/",
+            None,
+        ]
+    )
