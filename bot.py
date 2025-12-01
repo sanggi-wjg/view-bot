@@ -1,10 +1,9 @@
 import asyncio
 
 import typer
-from colorful_print import cp
 
-from viewerbot.bots.viewbot import ViewBot
-from viewerbot.model import ProxyServer
+from view_bot.bots.viewbot import ViewBot
+from view_bot.model import ProxyServer
 
 
 async def async_main(

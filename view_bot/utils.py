@@ -13,7 +13,7 @@ def read_proxy_available(
     datapath = os.path.join(script_dir, ".data", filename)
     filepath = Path(datapath)
     if not filepath.exists():
-        raise FileNotFoundError(f"파일이 존재하지 않습니다. 먼저 proxy_checker.py 실행해주세욤. {filepath}")
+        raise FileNotFoundError(f"File not exists: {filepath}. Please run 'proxy_checker.py' to create the file.")
 
     with open(filepath, "r") as f:
         return json.load(f)
