@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "viewer-bot"
+name = "view-bot"
 version = "0.1.0"
 description = ""
 authors = ["Raynor <jonggu.woo@fitpet.co.kr>"]

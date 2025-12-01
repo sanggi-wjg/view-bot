@@ -2,8 +2,8 @@ from colorful_print import cp
 from playwright.async_api import async_playwright, ViewportSize, ProxySettings
 from playwright_stealth import Stealth
 
-from viewerbot.model import ProxyServer
-from viewerbot.utils import get_random_locale_and_timezone, get_random_useragent, get_random_referer
+from view_bot.model import ProxyServer
+from view_bot.utils import get_random_referer, get_random_locale_and_timezone, get_random_useragent
 
 
 class ViewBot:
@@ -21,14 +21,14 @@ class ViewBot:
         self.headless = headless
         self.proxy_server = proxy_server
 
-    def _log_start(self, browser_name: str, browser_version: str):
-        cp.cyan(f"[INFO] {self.bot_name} started. | proxy: proxy : {self.proxy_server.address}", italic=True)
+    def _log_start(self):
+        cp.cyan(f"[INFO] {self.bot_name} started. | proxy: proxy : {self.proxy_server.address}")
 
     def _log_error(self, e: Exception):
         cp.bright_red(f"[ERROR] {self.bot_name} encountered an error: {e}", bold=True)
 
     def _log_finish(self):
-        cp.bright_cyan(f"[INFO] {self.bot_name} finished its task.", italic=True)
+        cp.bright_cyan(f"[INFO] {self.bot_name} finished its task.")
 
     async def visit_page(self, page):
         await page.goto(
@@ -47,7 +47,7 @@ class ViewBot:
     async def run(self):
         async with Stealth().use_async(async_playwright()) as p:
             browser = await p.firefox.launch(headless=self.headless, slow_mo=500)
-            self._log_start(browser.browser_type.name, browser.version)
+            self._log_start()
 
             try:
                 useragent = get_random_useragent()
@@ -58,12 +58,11 @@ class ViewBot:
                     locale=locale,
                     timezone_id=timezone,
                     viewport=ViewportSize(width=1920, height=1080),
-                    proxy=(ProxySettings(server=self.proxy_server.socks5_address) if self.proxy_server else None),
+                    proxy=ProxySettings(server=self.proxy_server.socks5_address) if self.proxy_server else None,
                 )
                 page = await context.new_page()
                 await self.visit_page(page)
                 # await asyncio.Future()
-
             except Exception as e:
                 self._log_error(e)
             finally:
