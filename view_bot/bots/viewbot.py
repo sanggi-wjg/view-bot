@@ -2,8 +2,8 @@ from colorful_print import cp
 from playwright.async_api import async_playwright, ViewportSize, ProxySettings
 from playwright_stealth import Stealth
 
-from viewerbot.model import ProxyServer
-from viewerbot.utils import get_random_locale_and_timezone, get_random_useragent, get_random_referer
+from view_bot.model import ProxyServer
+from view_bot.utils import get_random_referer, get_random_locale_and_timezone, get_random_useragent
 
 
 class ViewBot:
