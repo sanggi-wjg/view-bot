@@ -118,6 +118,8 @@ async def check_proxies_from_file(
 
 
 if __name__ == "__main__":
+    print("Deprecation Warning: proxy_checker.py is deprecated. Use tor proxy instead.")
+    exit()
     asyncio.run(
         check_proxies_from_file(),
     )

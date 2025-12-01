@@ -50,6 +50,7 @@ The number of ports should match `--concurrency` value.
 ```
 
 **Script Parameters:**
+
 - First argument: Number of ports (default: `5`)
 - Second argument: Starting port number (default: `9050`)
 
@@ -81,3 +82,21 @@ poetry run python bot.py --url "https://example.com" --concurrency 5 --headless 
 - `--headless`: Headless mode (default: `True`)
 - `--use-proxy`: Whether to use proxy (default: `True`)
 
+## ⚠️ Disclaimer
+
+**This project is for educational and testing purposes only.**
+
+This bot is designed to help you learn about:
+
+- Web automation using Playwright
+- Browser fingerprinting and anti-detection techniques
+- Proxy rotation and network programming
+- Asynchronous Python programming
+
+**Important:**
+
+- Only use this bot to test
+- Do not use this to artificially inflate traffic metrics or manipulate analytics
+- Be aware that automated traffic generation may violate platform policies
+
+The authors assume no responsibility for misuse of this software.
