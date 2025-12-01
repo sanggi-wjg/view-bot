@@ -33,6 +33,28 @@ sudo apt-get install tor
 When using `--use-proxy`, you need to run Tor with multiple SOCKS ports.
 The number of ports should match `--concurrency` value.
 
+#### Using the provided script (recommended)
+
+```bash
+# Start Tor with 5 ports (9050-9054)
+./start_tor.sh 5
+
+# Start Tor with 10 ports starting from 9050
+./start_tor.sh 10
+
+# Start Tor with 3 ports starting from 9100
+./start_tor.sh 3 9100
+
+# Stop Tor
+./stop_tor.sh
+```
+
+**Script Parameters:**
+- First argument: Number of ports (default: `5`)
+- Second argument: Starting port number (default: `9050`)
+
+#### Manual execution
+
 ```bash
 # For concurrency=5, run ports 9050-9054
 tor --SocksPort 9050 --SocksPort 9051 --SocksPort 9052 --SocksPort 9053 --SocksPort 9054

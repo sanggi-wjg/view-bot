@@ -9,6 +9,7 @@ from view_bot.model import ProxyServer
 async def async_main(
     url: str,
     concurrency: int,
+    start_port_number: int,
     headless: bool,
     use_proxy: bool,
 ):
@@ -18,7 +19,7 @@ async def async_main(
                 i,
                 url,
                 headless,
-                ProxyServer(ip="127.0.0.1", port=9050 + i),
+                ProxyServer(ip="127.0.0.1", port=start_port_number + i),
             )
             for i in range(concurrency)
         ]
@@ -32,11 +33,12 @@ async def async_main(
 def main(
     url: str = "https://httpbin.org/ip",
     concurrency: int = 5,
+    start_port_number: int = 9050,
     headless: bool = True,
     use_proxy: bool = True,
 ):
     asyncio.run(
-        async_main(url, concurrency, headless, use_proxy),
+        async_main(url, concurrency, start_port_number, headless, use_proxy),
     )
 
 
