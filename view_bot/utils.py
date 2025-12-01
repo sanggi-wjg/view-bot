@@ -2,10 +2,12 @@ import json
 import os
 import random
 from pathlib import Path
+from warnings import deprecated
 
 from fake_useragent import UserAgent
 
 
+@deprecated("read_proxy_available is deprecated.")
 def read_proxy_available(
     filename: str = "proxy_available.json",
 ) -> list[dict]:
