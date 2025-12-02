@@ -4,7 +4,7 @@ from view_bot.bots.viewbot import ViewBot
 
 from view_bot.enums import BotType
 
-from view_bot.model import ProxyServer
+from view_bot.models import ProxyServer
 
 _BOT_KLASS_REGISTRY = {
     BotType.SINGLE_VISIT: SingleVisitViewBot,

@@ -32,3 +32,12 @@ class ProxyServer(BaseModel):
         if self.username and self.password:
             return f"socks5://{self.username}:{self.password}@{self.ip}:{self.port}"
         raise ValueError("Username and password must be provided for authenticated SOCKS5 address.")
+
+
+class BrowserFingerprint(BaseModel):
+    user_agent: str
+    vendor: str
+    app_version: str
+    platform: str
+    locale: str
+    timezone: str

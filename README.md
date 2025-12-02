@@ -82,6 +82,30 @@ poetry run python bot.py --url "https://example.com" --concurrency 5 --headless 
 - `--headless`: Headless mode (default: `True`)
 - `--use-proxy`: Whether to use proxy (default: `True`)
 
+## Bot Detection Test Results
+
+<details>
+<summary>Click to view bot detection test results and recommended testing sites</summary>
+
+### Test Results from Sannysoft
+
+![Bot Check Results](.data/bot_check.png)
+
+### Recommended Testing Sites
+
+Test your bot against various detection methods:
+
+| Site                 | URL                                                                        | Test Coverage                                                     |
+|----------------------|----------------------------------------------------------------------------|-------------------------------------------------------------------|
+| **Sannysoft**        | [bot.sannysoft.com](https://bot.sannysoft.com)                             | Comprehensive bot detection (webdriver, plugins, languages, etc.) |
+| **Are You Headless** | [arh.antoinevastel.com](https://arh.antoinevastel.com/bots/areyouheadless) | Headless browser detection                                        |
+| **Browser Scan**     | [browserscan.net](https://browserscan.net)                                 | Complete browser fingerprint analysis                             |
+| **Pixelscan**        | [pixelscan.net](https://pixelscan.net)                                     | Canvas & WebGL fingerprinting tests                               |
+
+Each site focuses on different detection techniques. Testing against all four provides comprehensive coverage of bot detection methods.
+
+</details>
+
 ## ⚠️ Disclaimer
 
 **This project is for educational and testing purposes only.**

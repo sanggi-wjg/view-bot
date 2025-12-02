@@ -4,7 +4,7 @@ import typer
 
 from view_bot.bots.viewbot_factory import create_viewbot
 from view_bot.enums import BotType
-from view_bot.model import ProxyServer
+from view_bot.models import ProxyServer
 
 
 async def async_main(
