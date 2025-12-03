@@ -20,7 +20,7 @@ class SingleVisitViewBot(ViewBot):
 
         title = await page.title()
         body_text = await page.locator("body").inner_text()
-        self.log_info(f"visit {page}: {title} / {body_text[:50]}")
+        self.logger.info(f"Visited {self.url}: {title} / {body_text[:50]}")
         await page.wait_for_timeout(1000)
 
     async def create_context(self, browser) -> BrowserContext:
@@ -50,7 +50,7 @@ class SingleVisitViewBot(ViewBot):
                     "dom.maxHardwareConcurrency": 2,  # CPU 코어 수 제한
                 },
             )
-            self.log_start()
+            self.logger.info("Browser launched")
 
             try:
                 context = await self.create_context(browser)
@@ -59,11 +59,11 @@ class SingleVisitViewBot(ViewBot):
                 await asyncio.Future()
 
             except Exception as e:
-                self.log_error(e)
+                self.logger.error(f"An error occurred: {e}")
                 traceback.print_exc()
 
             finally:
-                self.log_finish()
+                self.logger.info("Closing browser")
                 if page:
                     await page.close()
                 if context:

@@ -4,6 +4,7 @@ import typer
 
 from view_bot.bots.viewbot_factory import create_viewbot
 from view_bot.enums import BotType
+from view_bot.logging import setup_logging
 from view_bot.models import ProxyConfig
 
 
@@ -37,6 +38,7 @@ def main(
     headless: bool = True,
     use_proxy: bool = True,
 ) -> None:
+    setup_logging()
     asyncio.run(
         async_main(
             bot_type=bot_type,
