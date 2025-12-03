@@ -1,15 +1,16 @@
 import asyncio
+import traceback
 
-from playwright.async_api import ViewportSize, ProxySettings, async_playwright
+from playwright.async_api import async_playwright, BrowserContext
 from playwright_stealth import Stealth
 
 from view_bot.bots.viewbot import ViewBot
-from view_bot.utils import get_random_referer
+from view_bot.utils import get_random_referer, get_random_viewport_size
 
 
 class SingleVisitViewBot(ViewBot):
 
-    async def visit_page(self, page):
+    async def visit_page(self, page) -> None:
         await page.goto(
             self.url,
             referer=get_random_referer(),
@@ -22,22 +23,33 @@ class SingleVisitViewBot(ViewBot):
         self.log_info(f"visit {page}: {title} / {body_text[:50]}")
         await page.wait_for_timeout(1000)
 
-    async def create_context(self, browser):
-        # useragent = get_random_useragent()
-        # locale, timezone = get_random_locale_and_timezone()
+    async def create_context(self, browser) -> BrowserContext:
+        timezone = await self.detect_ip_timezone(browser)
+        viewport = get_random_viewport_size()
 
         return await browser.new_context(
-            # locale=locale,
-            # timezone_id=timezone,
-            viewport=ViewportSize(width=1920, height=1080),
-            proxy=ProxySettings(server=self.proxy_server.socks5_address) if self.proxy_server else None,
+            timezone_id=timezone,
+            viewport=viewport,
+            proxy=self.proxy,
         )
 
-    async def run(self):
+    async def run(self) -> None:
         page, context = None, None
 
         async with Stealth().use_async(async_playwright()) as p:
-            browser = await p.firefox.launch(headless=self.headless, slow_mo=self.slow_motion)
+            browser = await p.firefox.launch(
+                headless=self.headless,
+                slow_mo=self.slow_motion,
+                firefox_user_prefs={
+                    "privacy.resistFingerprinting": True,
+                    "media.peerconnection.enabled": False,
+                    "privacy.resistFingerprinting.randomization.daily_reset.enabled": True,
+                    "webgl.disabled": False,
+                    "privacy.resistFingerprinting.randomDataOnCanvasExtract": True,
+                    "layout.css.font-visibility.private": 1,
+                    "dom.maxHardwareConcurrency": 2,  # CPU 코어 수 제한
+                },
+            )
             self.log_start()
 
             try:
@@ -48,6 +60,7 @@ class SingleVisitViewBot(ViewBot):
 
             except Exception as e:
                 self.log_error(e)
+                traceback.print_exc()
 
             finally:
                 self.log_finish()

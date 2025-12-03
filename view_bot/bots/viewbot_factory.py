@@ -4,7 +4,7 @@ from view_bot.bots.viewbot import ViewBot
 
 from view_bot.enums import BotType
 
-from view_bot.models import ProxyServer
+from view_bot.models import ProxyConfig
 
 _BOT_KLASS_REGISTRY = {
     BotType.SINGLE_VISIT: SingleVisitViewBot,
@@ -18,7 +18,7 @@ def create_viewbot(
     index: int,
     url: str,
     headless: bool,
-    proxy_server: ProxyServer | None,
+    proxy_config: ProxyConfig | None,
 ) -> ViewBot:
     bot_klass = _BOT_KLASS_REGISTRY.get(bot_type)
     if bot_klass is None:
@@ -28,5 +28,5 @@ def create_viewbot(
         index=index,
         url=url,
         headless=headless,
-        proxy_server=proxy_server,
+        proxy_config=proxy_config,
     )

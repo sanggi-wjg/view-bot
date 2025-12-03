@@ -4,7 +4,7 @@ import typer
 
 from view_bot.bots.viewbot_factory import create_viewbot
 from view_bot.enums import BotType
-from view_bot.models import ProxyServer
+from view_bot.models import ProxyConfig
 
 
 async def async_main(
@@ -21,7 +21,7 @@ async def async_main(
             i,
             url,
             headless,
-            ProxyServer(ip="127.0.0.1", port=start_port_number + i) if use_proxy else None,
+            ProxyConfig(ip="127.0.0.1", port=start_port_number + i) if use_proxy else None,
         )
         for i in range(concurrency)
     ]

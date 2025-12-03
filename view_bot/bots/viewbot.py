@@ -1,8 +1,9 @@
 import abc
 
 from colorful_print import cp
+from playwright.async_api import ProxySettings
 
-from view_bot.models import ProxyServer
+from view_bot.models import ProxyConfig
 
 
 class ViewBot(abc.ABC):
@@ -12,13 +13,14 @@ class ViewBot(abc.ABC):
         index: int,
         url: str,
         headless: bool = True,
-        proxy_server: ProxyServer | None = None,
+        proxy_config: ProxyConfig | None = None,
     ):
         self.index = index
         self.bot_name = f"Bot-{index}"
         self.url = url
         self.headless = headless
-        self.proxy_server = proxy_server
+        self.proxy_server = proxy_config
+        self.proxy = ProxySettings(server=self.proxy_server.socks5_address) if self.proxy_server else None
         self.slow_motion = 500
 
     def log_start(self) -> None:
@@ -38,5 +40,24 @@ class ViewBot(abc.ABC):
         cp.bright_blue(f"[INFO] {self.bot_name} finished its task.")
 
     @abc.abstractmethod
-    async def run(self):
+    async def run(self) -> None:
         raise NotImplementedError("Subclasses must implement this method")
+
+    async def detect_ip_timezone(self, browser) -> str | None:
+        page, context = None, None
+
+        try:
+            context = await browser.new_context(proxy=self.proxy)
+            page = await context.new_page()
+            await page.goto("https://ipapi.co/json/", timeout=10000)
+            whoami = await page.evaluate("() => JSON.parse(document.body.innerText)")
+            return whoami.get("timezone")
+        except Exception as e:
+            self.log_warn(e)
+            # todo print stack trace
+            return None
+        finally:
+            if page:
+                await page.close()
+            if context:
+                await context.close()

@@ -125,17 +125,6 @@ files = [
 ]
 
 [[package]]
-name = "fake-useragent"
-version = "2.2.0"
-description = "Up-to-date simple useragent faker with real world database"
-optional = false
-python-versions = ">=3.9"
-files = [
-    {file = "fake_useragent-2.2.0-py3-none-any.whl", hash = "sha256:67f35ca4d847b0d298187443aaf020413746e56acd985a611908c73dba2daa24"},
-    {file = "fake_useragent-2.2.0.tar.gz", hash = "sha256:4e6ab6571e40cc086d788523cf9e018f618d07f9050f822ff409a4dfe17c16b2"},
-]
-
-[[package]]
 name = "greenlet"
 version = "3.2.4"
 description = "Lightweight in-process concurrent programming"
@@ -663,4 +652,4 @@ typing-extensions = ">=4.12.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.13"
-content-hash = "308fb5089f2845d77f50784853047e6607d92185ba9ad721e633532ff45482b8"
+content-hash = "09853c66097f8d7dbd5c142a87b378f38ff3667cd044f4b88e75c78a927aeb0f"
