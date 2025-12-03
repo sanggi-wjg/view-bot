@@ -26,9 +26,16 @@ class ViewBot(abc.ABC):
         base_logger = logging.getLogger(__name__)
         self.logger = logging.LoggerAdapter(base_logger, {"botName": self.bot_name})
 
-    @abc.abstractmethod
-    async def run(self) -> None:
-        raise NotImplementedError("Subclasses must implement this method")
+    def get_stealth_firefox_preferences(self) -> dict[str, bool | int]:
+        return {
+            "privacy.resistFingerprinting": True,
+            "media.peerconnection.enabled": False,
+            "privacy.resistFingerprinting.randomization.daily_reset.enabled": True,
+            "webgl.disabled": False,
+            "privacy.resistFingerprinting.randomDataOnCanvasExtract": True,
+            "layout.css.font-visibility.private": 1,
+            "dom.maxHardwareConcurrency": 2,  # CPU 코어 수 제한
+        }
 
     async def detect_ip_timezone(self, browser) -> str | None:
         page, context = None, None
@@ -54,3 +61,7 @@ class ViewBot(abc.ABC):
                 await page.close()
             if context:
                 await context.close()
+
+    @abc.abstractmethod
+    async def run(self) -> None:
+        raise NotImplementedError("Subclasses must implement this method")

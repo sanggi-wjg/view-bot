@@ -40,15 +40,7 @@ class SingleVisitViewBot(ViewBot):
             browser = await p.firefox.launch(
                 headless=self.headless,
                 slow_mo=self.slow_motion,
-                firefox_user_prefs={
-                    "privacy.resistFingerprinting": True,
-                    "media.peerconnection.enabled": False,
-                    "privacy.resistFingerprinting.randomization.daily_reset.enabled": True,
-                    "webgl.disabled": False,
-                    "privacy.resistFingerprinting.randomDataOnCanvasExtract": True,
-                    "layout.css.font-visibility.private": 1,
-                    "dom.maxHardwareConcurrency": 2,  # CPU 코어 수 제한
-                },
+                firefox_user_prefs=self.get_stealth_firefox_preferences(),
             )
             self.logger.info("Browser launched")
 
