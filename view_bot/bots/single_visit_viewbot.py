@@ -1,4 +1,3 @@
-import asyncio
 import traceback
 
 from playwright.async_api import async_playwright, BrowserContext
@@ -42,20 +41,20 @@ class SingleVisitViewBot(ViewBot):
                 slow_mo=self.slow_motion,
                 firefox_user_prefs=self.get_stealth_firefox_preferences(),
             )
-            self.logger.info("Browser launched")
+            self.logger.info("🚀 launched")
 
             try:
                 context = await self.create_context(browser)
                 page = await context.new_page()
                 await self.visit_page(page)
-                await asyncio.Future()
+                # await asyncio.Future()
 
             except Exception as e:
-                self.logger.error(f"An error occurred: {e}")
+                self.logger.error(f"🔥 An error occurred: {e}")
                 traceback.print_exc()
 
             finally:
-                self.logger.info("Closing browser")
+                self.logger.info("👍 closed")
                 if page:
                     await page.close()
                 if context:

@@ -19,8 +19,8 @@ class ViewBot(abc.ABC):
         self.bot_name = f"ViewBot-{index}"
         self.url = url
         self.headless = headless
-        self.proxy_server = proxy_config
-        self.proxy = ProxySettings(server=self.proxy_server.socks5_address) if self.proxy_server else None
+        self.proxy_config = proxy_config
+        self.proxy = ProxySettings(server=self.proxy_config.socks5_address) if self.proxy_config else None
         self.slow_motion = 500
 
         base_logger = logging.getLogger(__name__)
