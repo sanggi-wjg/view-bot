@@ -1,13 +1,15 @@
-from playwright.async_api import ViewportSize, ProxySettings, async_playwright
+import traceback
+
+from playwright.async_api import async_playwright, BrowserContext, Browser, Page
 from playwright_stealth import Stealth
 
 from view_bot.bots.viewbot import ViewBot
-from view_bot.utils import get_random_referer, get_random_locale_and_timezone, get_random_useragent
+from view_bot.utils import get_random_referer, get_random_viewport_size
 
 
 class SingleVisitViewBot(ViewBot):
 
-    async def visit_page(self, page):
+    async def visit_page(self, page: Page) -> None:
         await page.goto(
             self.url,
             referer=get_random_referer(),
@@ -17,36 +19,41 @@ class SingleVisitViewBot(ViewBot):
 
         title = await page.title()
         body_text = await page.locator("body").inner_text()
-        self._log_info(f"visit {page}: {title}. {body_text[:50]}")
+        self.logger.info(f"Visited {self.url}: {title} / {body_text[:50]}")
         await page.wait_for_timeout(1000)
 
-    async def run(self):
+    async def create_context(self, browser: Browser) -> BrowserContext:
+        timezone = await self.detect_ip_timezone(browser)
+        viewport = get_random_viewport_size()
+
+        return await browser.new_context(
+            timezone_id=timezone,
+            viewport=viewport,
+            proxy=self.proxy,
+        )
+
+    async def run(self) -> None:
         page, context = None, None
 
         async with Stealth().use_async(async_playwright()) as p:
-            browser = await p.firefox.launch(headless=self.headless, slow_mo=self.slow_motion)
-            self._log_start()
+            browser = await p.firefox.launch(
+                headless=self.headless,
+                slow_mo=self.slow_motion,
+                firefox_user_prefs=self.get_stealth_firefox_preferences(),
+            )
+            self.logger.info("🚀 launched")
 
             try:
-                useragent = get_random_useragent()
-                locale, timezone = get_random_locale_and_timezone()
-
-                context = await browser.new_context(
-                    user_agent=useragent,
-                    locale=locale,
-                    timezone_id=timezone,
-                    viewport=ViewportSize(width=1920, height=1080),
-                    proxy=ProxySettings(server=self.proxy_server.socks5_address) if self.proxy_server else None,
-                )
+                context = await self.create_context(browser)
                 page = await context.new_page()
                 await self.visit_page(page)
-                # await asyncio.Future()
 
             except Exception as e:
-                self._log_error(e)
+                self.logger.error(f"🔥 An error occurred: {e}")
+                traceback.print_exc()
 
             finally:
-                self._log_finish()
+                self.logger.info("👍 closed")
                 if page:
                     await page.close()
                 if context:

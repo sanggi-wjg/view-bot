@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class ProxyServer(BaseModel):
+class ProxyConfig(BaseModel):
     ip: str
     port: int
     username: str | None = None

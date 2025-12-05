@@ -4,7 +4,34 @@ import random
 from pathlib import Path
 from warnings import deprecated
 
-from fake_useragent import UserAgent
+from playwright.async_api import ViewportSize
+
+_RANDOM_REFERER = [
+    "https://www.google.com/",
+    "https://www.google.co.kr/",
+    "https://www.naver.com/",
+    "https://www.daum.net/",
+    "https://www.bing.com/",
+    "https://www.yahoo.com/",
+    "https://www.facebook.com/",
+    "https://twitter.com/",
+    "https://www.youtube.com/",
+    "https://www.instagram.com/",
+    "https://www.reddit.com/",
+    "https://www.twitch.tv/",
+    None,
+]
+
+_RANDOM_VIEWPORT_SIZES = [
+    {"width": 1920, "height": 1080},
+    {"width": 1366, "height": 768},
+    {"width": 1440, "height": 900},
+    {"width": 1536, "height": 864},
+    {"width": 1280, "height": 720},
+    {"width": 1600, "height": 900},
+    {"width": 2560, "height": 1440},
+    {"width": 3840, "height": 2160},
+]
 
 
 @deprecated("read_proxy_available is deprecated.")
@@ -21,51 +48,10 @@ def read_proxy_available(
         return json.load(f)
 
 
-def get_random_useragent() -> str:
-    ua = UserAgent()
-    return ua.random
-
-
-def get_random_locale_and_timezone() -> tuple[str, str]:
-    return random.choice(
-        [
-            ("ko-KR", "Asia/Seoul"),
-            ("en-US", "America/New_York"),
-            ("en-US", "America/Los_Angeles"),
-            ("en-US", "America/Chicago"),
-            ("en-GB", "Europe/London"),
-            ("fr-FR", "Europe/Paris"),
-            ("de-DE", "Europe/Berlin"),
-            ("ja-JP", "Asia/Tokyo"),
-            ("zh-CN", "Asia/Shanghai"),
-            ("zh-TW", "Asia/Taipei"),
-            ("zh-HK", "Asia/Hong_Kong"),
-            ("en-SG", "Asia/Singapore"),
-            ("es-ES", "Europe/Madrid"),
-            ("pt-BR", "America/Sao_Paulo"),
-            ("ru-RU", "Europe/Moscow"),
-            ("it-IT", "Europe/Rome"),
-            ("en-AU", "Australia/Sydney"),
-            ("en-NZ", "Pacific/Auckland"),
-        ]
-    )
-
-
 def get_random_referer() -> str | None:
-    return random.choice(
-        [
-            "https://www.google.com/",
-            "https://www.google.co.kr/",
-            "https://www.naver.com/",
-            "https://www.daum.net/",
-            "https://www.bing.com/",
-            "https://www.yahoo.com/",
-            "https://www.facebook.com/",
-            "https://twitter.com/",
-            "https://www.youtube.com/",
-            "https://www.instagram.com/",
-            "https://www.reddit.com/",
-            "https://www.twitch.tv/",
-            None,
-        ]
-    )
+    # TODO: Expand referer list, or use external library to get popular referer.
+    return random.choice(_RANDOM_REFERER)
+
+
+def get_random_viewport_size() -> ViewportSize:
+    return ViewportSize(**random.choice(_RANDOM_VIEWPORT_SIZES))

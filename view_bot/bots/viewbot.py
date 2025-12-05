@@ -1,8 +1,9 @@
 import abc
+import logging
 
-from colorful_print import cp
+from playwright.async_api import ProxySettings, Browser
 
-from view_bot.model import ProxyServer
+from view_bot.models import ProxyConfig
 
 
 class ViewBot(abc.ABC):
@@ -12,31 +13,55 @@ class ViewBot(abc.ABC):
         index: int,
         url: str,
         headless: bool = True,
-        proxy_server: ProxyServer | None = None,
+        proxy_config: ProxyConfig | None = None,
     ):
         self.index = index
-        self.bot_name = f"Bot-{index}"
+        self.bot_name = f"ViewBot-{index}"
         self.url = url
         self.headless = headless
-        self.proxy_server = proxy_server
+        self.proxy_config = proxy_config
+        self.proxy = ProxySettings(server=self.proxy_config.socks5_address) if self.proxy_config else None
         self.slow_motion = 500
 
-    def _log_start(self) -> None:
-        proxy_info = f"proxy: {self.proxy_server.address}" if self.proxy_server else "no proxy"
-        cp.bright_blue(f"[INFO] {self.bot_name} started. | {proxy_info}")
+        base_logger = logging.getLogger(__name__)
+        self.logger = logging.LoggerAdapter(base_logger, {"botName": self.bot_name})
 
-    def _log_info(self, *args) -> None:
-        cp.green(f"[INFO] {self.bot_name} ", *args)
+    def get_stealth_firefox_preferences(self) -> dict[str, bool | int]:
+        return {
+            "privacy.resistFingerprinting": True,
+            "media.peerconnection.enabled": False,
+            "privacy.resistFingerprinting.randomization.daily_reset.enabled": True,
+            "webgl.disabled": False,
+            "privacy.resistFingerprinting.randomDataOnCanvasExtract": True,
+            "layout.css.font-visibility.private": 1,
+            "dom.maxHardwareConcurrency": 2,  # CPU 코어 수 제한
+        }
 
-    def _log_warn(self, *args) -> None:
-        cp.yellow(f"[WARN] {self.bot_name} ", *args)
+    async def detect_ip_timezone(self, browser: Browser) -> str | None:
+        page, context = None, None
 
-    def _log_error(self, e: Exception) -> None:
-        cp.red(f"[ERROR] {self.bot_name} encountered an error: {e}", bold=True)
+        try:
+            self.logger.debug("Detecting ip timezone...")
 
-    def _log_finish(self) -> None:
-        cp.bright_blue(f"[INFO] {self.bot_name} finished its task.")
+            context = await browser.new_context(proxy=self.proxy)
+            page = await context.new_page()
+            await page.goto("https://ipapi.co/json/", timeout=10000)
+
+            whoami = await page.evaluate("() => JSON.parse(document.body.innerText)")
+            timezone = whoami.get("timezone")
+            self.logger.debug("Detected timezone: %s", timezone)
+            return timezone
+
+        except Exception as e:
+            self.logger.warning(f"Failed to get ip timezone: {e}")
+            return None
+
+        finally:
+            if page:
+                await page.close()
+            if context:
+                await context.close()
 
     @abc.abstractmethod
-    async def run(self):
+    async def run(self) -> None:
         raise NotImplementedError("Subclasses must implement this method")

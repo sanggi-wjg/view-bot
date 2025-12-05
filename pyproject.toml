@@ -7,14 +7,15 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.13"
-black = "^25.11.0"
 httpx = "^0.28.1"
 colorful-print = "^1.0.0"
 pydantic = "^2.12.4"
 typer = "^0.20.0"
 playwright = "^1.56.0"
 playwright-stealth = "^2.0.0"
-fake-useragent = "^2.2.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.11.0"
 
 [build-system]
 requires = ["poetry-core"]
