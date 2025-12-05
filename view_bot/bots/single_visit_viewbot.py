@@ -1,6 +1,6 @@
 import traceback
 
-from playwright.async_api import async_playwright, BrowserContext
+from playwright.async_api import async_playwright, BrowserContext, Browser, Page
 from playwright_stealth import Stealth
 
 from view_bot.bots.viewbot import ViewBot
@@ -9,7 +9,7 @@ from view_bot.utils import get_random_referer, get_random_viewport_size
 
 class SingleVisitViewBot(ViewBot):
 
-    async def visit_page(self, page) -> None:
+    async def visit_page(self, page: Page) -> None:
         await page.goto(
             self.url,
             referer=get_random_referer(),
@@ -22,7 +22,7 @@ class SingleVisitViewBot(ViewBot):
         self.logger.info(f"Visited {self.url}: {title} / {body_text[:50]}")
         await page.wait_for_timeout(1000)
 
-    async def create_context(self, browser) -> BrowserContext:
+    async def create_context(self, browser: Browser) -> BrowserContext:
         timezone = await self.detect_ip_timezone(browser)
         viewport = get_random_viewport_size()
 
@@ -47,7 +47,6 @@ class SingleVisitViewBot(ViewBot):
                 context = await self.create_context(browser)
                 page = await context.new_page()
                 await self.visit_page(page)
-                # await asyncio.Future()
 
             except Exception as e:
                 self.logger.error(f"🔥 An error occurred: {e}")

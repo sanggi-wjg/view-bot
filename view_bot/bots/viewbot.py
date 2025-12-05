@@ -1,7 +1,7 @@
 import abc
 import logging
 
-from playwright.async_api import ProxySettings
+from playwright.async_api import ProxySettings, Browser
 
 from view_bot.models import ProxyConfig
 
@@ -37,7 +37,7 @@ class ViewBot(abc.ABC):
             "dom.maxHardwareConcurrency": 2,  # CPU 코어 수 제한
         }
 
-    async def detect_ip_timezone(self, browser) -> str | None:
+    async def detect_ip_timezone(self, browser: Browser) -> str | None:
         page, context = None, None
 
         try:

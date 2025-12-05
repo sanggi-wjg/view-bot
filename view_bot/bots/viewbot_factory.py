@@ -1,3 +1,4 @@
+from view_bot.bots.continuous_viewbot import ContinuousViewBot
 from view_bot.bots.single_visit_viewbot import SingleVisitViewBot
 from view_bot.bots.viewbot import ViewBot
 
@@ -8,7 +9,7 @@ from view_bot.models import ProxyConfig
 
 _BOT_KLASS_REGISTRY = {
     BotType.SINGLE_VISIT: SingleVisitViewBot,
-    # BotType.CONTINUOUS: ContinuousViewbot,
+    BotType.CONTINUOUS: ContinuousViewBot,
     # BotType.BROWSING: BrowsingViewBot,
 }
 
