@@ -1,5 +1,7 @@
 # Viewer Bot
 
+[![✅ Build](https://github.com/sanggi-wjg/view-bot/actions/workflows/build.yaml/badge.svg)](https://github.com/sanggi-wjg/view-bot/actions/workflows/build.yaml)
+
 Playwright-based automated web page visitor bot
 
 ![Demo](.data/demo.png)
@@ -72,15 +74,32 @@ poetry run python bot.py
 ### With Options
 
 ```bash
+# Single visit with proxy
 poetry run python bot.py --url "https://example.com" --concurrency 5 --headless --use-proxy
+
+# Continuous mode (keeps browser open until manually stopped)
+poetry run python bot.py --bot-type continuous --url "https://example.com"
+
+# Without proxy
+poetry run python bot.py --use-proxy=false
+
+# Custom proxy port range
+poetry run python bot.py --start-port-number 9100 --concurrency 3
 ```
 
 **Parameters**
 
-- `--url`: URL to visit (default: `https://httpbin.org/ip`)
-- `--concurrency`: Number of concurrent bots (default: `5`)
-- `--headless`: Headless mode (default: `True`)
-- `--use-proxy`: Whether to use proxy (default: `True`)
+- `--bot-type`: Bot type to use (default: `single_visit`)
+  - `single_visit`: Visits page once and terminates
+  - `continuous`: Keeps visiting the page until manually stopped
+  - `browsing`: Browses multiple pages (not yet implemented)
+- `--url`: Target URL to visit (default: `https://httpbin.org/ip`)
+- `--concurrency`: Number of concurrent bots to run (default: `5`)
+- `--start-port-number`: Starting SOCKS proxy port number (default: `9050`)
+  - Each bot uses a sequential port: 9050, 9051, 9052, etc.
+  - Must match the Tor configuration
+- `--headless`: Run browser in headless mode (default: `True`)
+- `--use-proxy`: Enable proxy rotation via Tor (default: `True`)
 
 ## Bot Detection Test Results
 
