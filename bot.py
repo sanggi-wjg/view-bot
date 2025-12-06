@@ -1,4 +1,5 @@
 import asyncio
+import random
 
 import typer
 
@@ -6,6 +7,13 @@ from view_bot.bots.viewbot_factory import create_viewbot
 from view_bot.enums import BotType
 from view_bot.logging import setup_logging
 from view_bot.models import ProxyConfig
+
+
+async def run_bot_with_delay(bot, bot_index: int, concurrency: int):
+    if bot_index > 0:
+        delay = random.uniform(1.0, min(float(concurrency), 60.0))
+        await asyncio.sleep(delay)
+    await bot.run()
 
 
 async def async_main(
@@ -26,7 +34,7 @@ async def async_main(
         )
         for i in range(concurrency)
     ]
-    tasks = [bot.run() for bot in bots]
+    tasks = [run_bot_with_delay(bot, i, concurrency) for i, bot in enumerate(bots)]
     await asyncio.gather(*tasks)
 
 
