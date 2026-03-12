@@ -15,7 +15,7 @@ playwright = "^1.56.0"
 playwright-stealth = "^2.0.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "^25.11.0"
+black = "^26.3.1"
 
 [build-system]
 requires = ["poetry-core"]
